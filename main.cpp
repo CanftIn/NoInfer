@@ -1,13 +1,12 @@
-#include <iostream>
-#include <armadillo>
+#include <glog/logging.h>
+#include <gtest/gtest.h>
 
-int main() {
-  arma::fmat in_1(32, 32, arma::fill::ones);
-  arma::fmat in_2(32, 32, arma::fill::ones);
+int main(int argc, char *argv[]) {
+  testing::InitGoogleTest(&argc, argv);
+  google::InitGoogleLogging("Kuiper");
+  FLAGS_log_dir = "../log";
+  FLAGS_alsologtostderr = true;
 
-  arma::fmat out = in_1 + in_2;
-  std::cout << "rows " << out.n_rows << "\n";
-  std::cout << "cols " << out.n_cols << "\n";
-  std::cout << "value " << out.at(0) << "\n";
-  return 0;
+  LOG(INFO) << "Start test...\n";
+  return RUN_ALL_TESTS();
 }
