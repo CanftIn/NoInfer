@@ -23,8 +23,9 @@ aux_source_directory(./test DIR_TEST)
 aux_source_directory(./src DIR_SOURCE)
 aux_source_directory(./src/layer/abstract DIR_ABSTRACT_LAYER)
 aux_source_directory(./src/layer/details DIR_DETAIL_LAYER)
+aux_source_directory(./src/parser DIR_PARSER)
 
-add_executable(noinfer main.cpp ${DIR_TEST} ${DIR_SOURCE} ${DIR_DETAIL_LAYER} ${DIR_ABSTRACT_LAYER})
+add_executable(noinfer main.cpp ${DIR_TEST} ${DIR_SOURCE} ${DIR_DETAIL_LAYER} ${DIR_ABSTRACT_LAYER} ${DIR_PARSER} )
 target_link_libraries(noinfer ${link_lib} ${link_math_lib} OpenMP::OpenMP_CXX)
 
 target_include_directories(noinfer PUBLIC ${glog_INCLUDE_DIR})
