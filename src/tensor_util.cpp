@@ -167,30 +167,37 @@ std::shared_ptr<Tensor<float>> TensorPadding(
 
 std::tuple<sftensor, sftensor> TensorBroadcast(const sftensor& tensor1,
                                                const sftensor& tensor2) {
-  CHECK(tensor1 != nullptr && tensor2 != nullptr);
-  if (tensor1->shapes() == tensor2->shapes()) {
-    return {tensor1, tensor2};
+  CHECK(tensor1 != nullptr && tensor2 != nullptr);  // 确保两个张量都不为空指针
+
+  if (tensor1->shapes() == tensor2->shapes()) {  // 如果两个张量形状相同
+    return {tensor1, tensor2};                   // 直接返回这两个张量
   } else {
+    // 确保两个张量的通道数相同
     CHECK(tensor1->channels() == tensor2->channels());
+    // 如果tensor2是一个通道的单个值
     if (tensor2->rows() == 1 && tensor2->cols() == 1) {
+      // 创建一个新的张量，其形状与tensor1匹配，但每个元素的值是tensor2的单个值
       sftensor new_tensor =
           TensorCreate(tensor2->channels(), tensor1->rows(), tensor1->cols());
       CHECK(tensor2->size() == tensor2->channels());
       for (uint32_t c = 0; c < tensor2->channels(); ++c) {
-        new_tensor->slice(c).fill(tensor2->index(c));
+        new_tensor->slice(c).fill(tensor2->index(c));  // 填充新的张量
       }
-      return {tensor1, new_tensor};
-    } else if (tensor1->rows() == 1 && tensor1->cols() == 1) {
+      return {tensor1, new_tensor};  // 返回tensor1和新的广播张量
+    } else if (tensor1->rows() == 1 &&
+               tensor1->cols() == 1) {  // 如果tensor1是一个通道的单个值
+      // 创建一个新的张量，其形状与tensor2匹配，但每个元素的值是tensor1的单个值
       sftensor new_tensor =
           TensorCreate(tensor1->channels(), tensor2->rows(), tensor2->cols());
       CHECK(tensor1->size() == tensor1->channels());
       for (uint32_t c = 0; c < tensor1->channels(); ++c) {
-        new_tensor->slice(c).fill(tensor1->index(c));
+        new_tensor->slice(c).fill(tensor1->index(c));  // 填充新的张量
       }
-      return {new_tensor, tensor2};
+      return {new_tensor, tensor2};  // 返回新的广播张量和tensor2
     } else {
-      LOG(FATAL) << "Broadcast shape is not adapting!";
-      return {tensor1, tensor2};
+      LOG(FATAL)
+          << "Broadcast shape is not adapting!";  // 形状不兼容，打印错误日志
+      return {tensor1, tensor2};  // 返回原始张量（实际上不会执行到这里）
     }
   }
 }
