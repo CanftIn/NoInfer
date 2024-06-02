@@ -12,6 +12,7 @@ find_package(glog REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 find_package(GTest REQUIRED)
+find_package(OpenCV REQUIRED)
 
 set(link_lib glog::glog GTest::gtest)
 if(!WIN32)
@@ -26,7 +27,7 @@ aux_source_directory(./src/layer/details DIR_DETAIL_LAYER)
 aux_source_directory(./src/parser DIR_PARSER)
 
 add_executable(noinfer main.cpp ${DIR_TEST} ${DIR_SOURCE} ${DIR_DETAIL_LAYER} ${DIR_ABSTRACT_LAYER} ${DIR_PARSER} )
-target_link_libraries(noinfer ${link_lib} ${link_math_lib} OpenMP::OpenMP_CXX)
+target_link_libraries(noinfer ${link_lib} ${OpenCV_LIBS} ${link_math_lib} OpenMP::OpenMP_CXX)
 
 target_include_directories(noinfer PUBLIC ${glog_INCLUDE_DIR})
 target_include_directories(noinfer PUBLIC ${GTest_INCLUDE_DIR})
